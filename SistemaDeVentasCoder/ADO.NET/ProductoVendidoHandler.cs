@@ -24,6 +24,15 @@ namespace SistemaDeVentasCoder.ADO.NET
                 throw;
             }
         }
+        private ProductoVendido ObtenerProductoVendidoDesdeReader(SqlDataReader reader)
+        {
+            ProductoVendido productoVendido = new ProductoVendido();
+            productoVendido.Id = Convert.ToInt32(reader["Id"].ToString());
+            productoVendido.Stock = Convert.ToInt32(reader["Stock"].ToString());
+            productoVendido.IdProducto = Convert.ToInt32(reader["IdProducto"].ToString());
+            productoVendido.IdVenta = Convert.ToInt32(reader["IdVenta"].ToString());
+            return productoVendido;
+        }
 
         public List<ProductoVendido> GetProductosVendidos() 
         {
@@ -43,11 +52,7 @@ namespace SistemaDeVentasCoder.ADO.NET
                         {
                             while (reader.Read())
                             {
-                                ProductoVendido productoVendido = new ProductoVendido();
-                                productoVendido.Id = Convert.ToInt32(reader["Id"].ToString());
-                                productoVendido.Stock = Convert.ToInt32(reader["Stock"].ToString());
-                                productoVendido.IdProducto = Convert.ToInt32(reader["IdProducto"].ToString());
-                                productoVendido.IdVenta = Convert.ToInt32(reader["IdVenta"].ToString());
+                                ProductoVendido productoVendido = ObtenerProductoVendidoDesdeReader(reader);
                                 listaProductosVendidos.Add(productoVendido);
                             }
                         }
@@ -61,6 +66,43 @@ namespace SistemaDeVentasCoder.ADO.NET
                 throw;
             }
             return listaProductosVendidos;
+        }
+        public ProductoVendido ObtenerProductoVendido(int id)
+        {
+            if (conexion == null)
+            {
+                throw new Exception("Conexión no realizada");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM ProductoVendido WHERE id = @id", conexion))
+                {
+                    conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            ProductoVendido productoVendido = ObtenerProductoVendidoDesdeReader(reader);
+                            return productoVendido;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                conexion.Close();
+            }
         }
     }
 }

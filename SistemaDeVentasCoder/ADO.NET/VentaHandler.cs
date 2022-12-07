@@ -24,6 +24,14 @@ namespace SistemaDeVentasCoder.ADO.NET
                 throw;
             }
         }
+        private Venta ObtenerVentaDesdeReader(SqlDataReader reader)
+        {
+            Venta venta = new Venta();
+            venta.Id = Convert.ToInt32(reader["Id"].ToString());
+            venta.Comentarios = reader["Comentarios"].ToString();
+            venta.IdUsuario = Convert.ToInt32(reader["IdUsuario"].ToString());
+            return venta;
+        }
 
         public List<Venta> GetVenta() 
         {
@@ -43,10 +51,7 @@ namespace SistemaDeVentasCoder.ADO.NET
                         {
                             while (reader.Read())
                             {
-                                Venta venta = new Venta();
-                                venta.Id = Convert.ToInt32(reader["Id"].ToString());
-                                venta.Comentarios = reader["Comentarios"].ToString();
-                                venta.IdUsuario = Convert.ToInt32(reader["IdUsuario"].ToString());
+                                Venta venta = ObtenerVentaDesdeReader(reader);
                                 listaVentas.Add(venta);
                             }
                         }
@@ -60,6 +65,66 @@ namespace SistemaDeVentasCoder.ADO.NET
                 throw;
             }
             return listaVentas;
+        }
+        public Venta ObtenerVenta(int id)
+        {
+            if (conexion == null)
+            {
+                throw new Exception("Conexión no realizada");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Venta WHERE id = @id", conexion))
+                {
+                    conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            Venta venta = ObtenerVentaDesdeReader(reader);
+                            return venta;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                conexion.Close();
+            }
+        }
+
+        public void CargarVenta (Venta venta) 
+        {
+            if (conexion == null)
+            {
+                throw new Exception("Conexión no realizada");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO Venta(Comentarios, IdUsuario) VALUES(@coemtarios, @idUsuario); SELECT @@Identity", conexion))
+                {
+                    conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("comentarios", SqlDbType.VarChar) { Value = venta.Comentarios });
+                    cmd.Parameters.Add(new SqlParameter("idUsuario", SqlDbType.BigInt) { Value = venta.IdUsuario });
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
     }
 }

@@ -25,5 +25,42 @@ namespace SistemaDeVentasCoder.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<Venta> Get(int id)
+        {
+            try
+            {
+                Venta venta = handler.ObtenerVenta(id);
+                if (venta != null)
+                {
+                    return Ok(venta);
+                }
+                else
+                {
+                    return NotFound("La venta no fue encontrada");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
+        
+        [HttpPost]
+        public ActionResult Post([FromBody] Venta venta) 
+        {
+            try
+            {
+                handler.CargarVenta(venta);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
     }
 }

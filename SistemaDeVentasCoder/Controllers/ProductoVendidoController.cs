@@ -25,5 +25,27 @@ namespace SistemaDeVentasCoder.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<ProductoVendido> Get(int id)
+        {
+            try
+            {
+                ProductoVendido productoVendido = handler.ObtenerProductoVendido(id);
+                if (productoVendido != null)
+                {
+                    return Ok(productoVendido);
+                }
+                else
+                {
+                    return NotFound("El producto vendido no fue encontrado");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Problem(ex.Message);
+            }
+        }
     }
 }
