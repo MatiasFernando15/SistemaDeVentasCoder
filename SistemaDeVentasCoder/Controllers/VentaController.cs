@@ -62,5 +62,26 @@ namespace SistemaDeVentasCoder.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [HttpDelete]
+        public ActionResult Delete([FromBody] int id)
+        {
+            try
+            {
+                bool seElimino = handler.EliminarVenta(id);
+                if (seElimino)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
     }
 }

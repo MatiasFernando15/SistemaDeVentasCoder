@@ -126,5 +126,32 @@ namespace SistemaDeVentasCoder.ADO.NET
                 throw;
             }
         }
+        public bool EliminarVenta(int id)
+        {
+            if (conexion == null)
+            {
+                throw new Exception("Conexión no realizada");
+            }
+            try
+            {
+                int filasAfectadas = 0;
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Venta WHERE Id = @id", conexion))
+                {
+                    conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    filasAfectadas = cmd.ExecuteNonQuery();
+                }
+                return filasAfectadas > 0;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                conexion.Close();
+            }
+        }
     }
 }
