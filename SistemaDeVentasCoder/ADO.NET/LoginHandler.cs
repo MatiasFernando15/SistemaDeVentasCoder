@@ -49,6 +49,10 @@ namespace SistemaDeVentasCoder.ADO.NET
 
                 throw;
             }
+            finally
+            {
+                conexion.Close();
+            }
         }
     }
 }

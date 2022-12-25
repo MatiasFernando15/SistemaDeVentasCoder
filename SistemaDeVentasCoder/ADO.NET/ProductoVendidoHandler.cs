@@ -43,10 +43,10 @@ namespace SistemaDeVentasCoder.ADO.NET
             }
             try
             {
-                using (SqlCommand command = new SqlCommand ("SELECT * FROM ProductoVendido", conexion))
+                using (SqlCommand cmd = new SqlCommand ("SELECT * FROM ProductoVendido", conexion))
                 {
                     conexion.Open();
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
@@ -102,6 +102,42 @@ namespace SistemaDeVentasCoder.ADO.NET
             finally
             {
                 conexion.Close();
+            }
+        }
+        public static Producto? obtenerProductoSimplificadoPorId(int id, SqlConnection conexion)
+        {
+            if (conexion == null)
+            {
+                throw new Exception("Conexión no establecida");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT Id, Stock FROM producto WHERE id = @id", conexion))
+                {
+                    if (conexion.State == ConnectionState.Closed) conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            Producto producto = new Producto()
+                            {
+                                Id = Convert.ToInt32(reader["Id"].ToString()),
+                                Stock = Convert.ToInt32(reader["Stock"].ToString())
+                            };
+                            return producto;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                throw;
             }
         }
     }

@@ -7,6 +7,8 @@
         public int IdProducto { get; set; }
         public int IdVenta { get; set; }
 
+        public Producto? producto { get; set; }
+
         public ProductoVendido() 
         {
             Id = 0;

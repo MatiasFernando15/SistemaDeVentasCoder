@@ -121,8 +121,8 @@ namespace SistemaDeVentasCoder.ADO.NET
                 {
                     conexion.Open();
                     cmd.Parameters.Add(new SqlParameter("descripciones", SqlDbType.VarChar) { Value = producto.Descripciones });
-                    cmd.Parameters.Add(new SqlParameter("costo", SqlDbType.Float) { Value = producto.Costo });
-                    cmd.Parameters.Add(new SqlParameter("precioVenta", SqlDbType.Float) { Value = producto.PrecioVenta });
+                    cmd.Parameters.Add(new SqlParameter("costo", SqlDbType.Money) { Value = producto.Costo });
+                    cmd.Parameters.Add(new SqlParameter("precioVenta", SqlDbType.Money) { Value = producto.PrecioVenta });
                     cmd.Parameters.Add(new SqlParameter("stock", SqlDbType.Int) { Value = producto.Stock });
                     cmd.Parameters.Add(new SqlParameter("idUsuario", SqlDbType.BigInt) { Value = producto.IdUsuario});
                     cmd.ExecuteNonQuery();
@@ -181,8 +181,8 @@ namespace SistemaDeVentasCoder.ADO.NET
                 {
                     conexion.Open();
                     cmd.Parameters.Add(new SqlParameter("descripciones", SqlDbType.VarChar) { Value = productoAActualizar.Descripciones });
-                    cmd.Parameters.Add(new SqlParameter("costo", SqlDbType.Float) { Value = productoAActualizar.Costo });
-                    cmd.Parameters.Add(new SqlParameter("precioVenta", SqlDbType.Float) { Value = productoAActualizar.PrecioVenta });
+                    cmd.Parameters.Add(new SqlParameter("costo", SqlDbType.Money) { Value = productoAActualizar.Costo });
+                    cmd.Parameters.Add(new SqlParameter("precioVenta", SqlDbType.Money) { Value = productoAActualizar.PrecioVenta });
                     cmd.Parameters.Add(new SqlParameter("stock", SqlDbType.Int) { Value = productoAActualizar.Stock });
                     cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
                     cmd.ExecuteNonQuery();
@@ -214,6 +214,7 @@ namespace SistemaDeVentasCoder.ADO.NET
                     cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
                     filasAfectadas = cmd.ExecuteNonQuery();
                 }
+                
                 return filasAfectadas > 0;
             }
             catch (Exception)

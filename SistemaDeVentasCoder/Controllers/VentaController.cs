@@ -12,12 +12,11 @@ namespace SistemaDeVentasCoder.Controllers
         private VentaHandler handler = new VentaHandler();
 
         [HttpGet]
-        public ActionResult<List<Venta>> Get()
+        public ActionResult Get()
         {
             try
             {
-                List<Venta> lista = handler.GetVenta();
-                return Ok(lista);
+                return Ok(handler.obtenerVenta(null));
             }
             catch (Exception ex)
             {
@@ -26,28 +25,6 @@ namespace SistemaDeVentasCoder.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Venta> Get(int id)
-        {
-            try
-            {
-                Venta venta = handler.ObtenerVenta(id);
-                if (venta != null)
-                {
-                    return Ok(venta);
-                }
-                else
-                {
-                    return NotFound("La venta no fue encontrada");
-                }
-            }
-            catch (Exception ex)
-            {
-
-                return Problem(ex.Message);
-            }
-        }
-        
         [HttpPost]
         public ActionResult Post([FromBody] Venta venta) 
         {
